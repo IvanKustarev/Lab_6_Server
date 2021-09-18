@@ -34,6 +34,7 @@ public class Messenger {
         Socket socket = response.getSocket();
         response.setSocket(null);
         byte[] bytes = Serializer.serialize(response);
+//        System.out.println(bytes.length);
         socket.getOutputStream().write(bytes);
     }
 

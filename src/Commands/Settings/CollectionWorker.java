@@ -88,7 +88,7 @@ public class CollectionWorker implements Executor {
                 "remove_head : вывести первый элемент коллекции и удалить его\n" +
                 "filter_contains_name name : вывести элементы, значение поля name которых содержит заданную подстроку\n" +
                 "filter_less_than_governor governor : вывести элементы, значение поля governor которых меньше заданного\n" +
-                "print_field_descending_government : вывести значения поля government всех элементов в порядке убывания"
+                "print_field_descending_government : вывести значения поля government всех элементов в порядке убывания";
         return new Response(answer);
     }
 
@@ -105,8 +105,22 @@ public class CollectionWorker implements Executor {
     }
 
     @Override
-    public Response executeRemoveById(String id) {
-        return null;
+    public Response executeRemoveById(String idStr) {
+        int id = 0;
+        try {
+            id = Integer.valueOf(idStr);
+        } catch (Exception e) {
+            return new Response("id должен быть числом!");
+        }
+        Iterator iterator = cities.iterator();
+        while (iterator.hasNext()){
+            City city = (City) iterator.next();
+            if(city.getId() == id){
+                iterator.remove();
+                return new Response("Элемент успешно удалён");
+            }
+        }
+        return new Response("Элемента с таким id не существует!");
     }
 
     @Override
@@ -126,6 +140,7 @@ public class CollectionWorker implements Executor {
         if (showString.equals("")) {
             return new Response("Коллекция пустая!");
         }
+        List<City> cities = sortCollection();
         for (Object object : cities) {
             City city = (City) object;
             showString += city.show();
