@@ -166,9 +166,15 @@ public class City implements Comparable, Serializable {
         } else if(metersAboveSeaLevel < enotherCity.getMetersAboveSeaLevel()){
             score--;
         }
-        score += climate.compareTo(enotherCity.getClimate());
-        score += government.compareTo(enotherCity.getGovernment());
-        score += governor.compareTo(enotherCity.getGovernor());
+        try {
+            score += climate.compareTo(enotherCity.getClimate());
+        }catch (Exception e){}
+        try {
+            score += government.compareTo(enotherCity.getGovernment());
+        }catch (Exception e){}
+        try {
+            score += governor.compareTo(enotherCity.getGovernor());
+        }catch (Exception e){}
         return score;
     }
 }
