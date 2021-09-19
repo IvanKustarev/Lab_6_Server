@@ -9,6 +9,7 @@ import Messenger.Response;
 import FileManager.FileWorker;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CollectionWorker implements Executor {
 
@@ -17,10 +18,6 @@ public class CollectionWorker implements Executor {
 
     public CollectionWorker(ArrayDeque<City> cities) {
         this.cities = cities;
-    }
-
-    public List<City> getCities() {
-        return sortCollection();
     }
 
     @Override
@@ -60,8 +57,8 @@ public class CollectionWorker implements Executor {
         String str;
         try {
             str = fileManager.readFile(fileName);
-            return new Response("true;"+str);
-        }catch (Exception e){
+            return new Response("true;" + str);
+        } catch (Exception e) {
             return new Response("false;Невозможно прочесть данный файл!");
         }
     }
@@ -74,10 +71,10 @@ public class CollectionWorker implements Executor {
     @Override
     public Response executeFilterContainsName(String name) {
         String result = "";
-        for (City city : getCitiesArray()){
-            if(city.getName().contains(name)){
-                result = city.show();
-            }
+
+        City[] cities = Arrays.stream(getCitiesArray()).filter(City -> City.getName().contains(name)).toArray(City[]::new);
+        for(City city : cities){
+            result += city.show();
         }
         return new Response(result);
     }
@@ -85,19 +82,19 @@ public class CollectionWorker implements Executor {
     @Override
     public Response executeFilterLessThanGovernor(String governorStr) {
         City[] cities = getCitiesArray();
-        if(cities.length == 0){
+        if (cities.length == 0) {
             return new Response("Коллкция пустая!");
         }
         Date date;
         try {
             date = new Date(Integer.valueOf(governorStr.split(":")[0]) - 1900, Integer.valueOf(governorStr.split(":")[1]), Integer.valueOf(governorStr.split(":")[2]));
-        }catch (Exception e){
+        } catch (Exception e) {
             return new Response("Для работы команды необходимо ввести дату рождения губернатора в формате yyyy:mm:dd");
         }
 
         String str = "";
-        for(City city : cities){
-            if(city.getGovernor().compareTo(new Human("", date)) < 0){
+        for (City city : cities) {
+            if (city.getGovernor().compareTo(new Human("", date)) < 0) {
                 str += city.getGovernor().show() + "\n";
             }
         }
@@ -140,11 +137,11 @@ public class CollectionWorker implements Executor {
     @Override
     public Response executePrintFieldDescendingGovernment() {
         City[] cities = getCitiesArray();
-        if(cities.length == 0){
+        if (cities.length == 0) {
             return new Response("Коллекция пустая!");
         }
         String str = "";
-        for(int i = cities.length-1; i >=0; i++){
+        for (int i = cities.length - 1; i >= 0; i++) {
             str += cities[i].getGovernment().name() + "\n";
         }
         return new Response(str);
@@ -159,9 +156,9 @@ public class CollectionWorker implements Executor {
             return new Response("id должен быть числом!");
         }
         Iterator iterator = cities.iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             City city = (City) iterator.next();
-            if(city.getId() == id){
+            if (city.getId() == id) {
                 iterator.remove();
                 return new Response("Элемент успешно удалён");
             }
@@ -172,7 +169,7 @@ public class CollectionWorker implements Executor {
     @Override
     public Response executeRemoveFirst() {
         City[] cities = getCitiesArray();
-        if(cities.length == 0){
+        if (cities.length == 0) {
             return new Response("Коллекция пустая!");
         }
         int id = cities[0].getId();
@@ -183,7 +180,7 @@ public class CollectionWorker implements Executor {
     @Override
     public Response executeRemoveHead() {
         City[] cities = getCitiesArray();
-        if(cities.length == 0){
+        if (cities.length == 0) {
             return new Response("Коллекция пустая!");
         }
         String str = cities[0].show();
@@ -194,7 +191,7 @@ public class CollectionWorker implements Executor {
     @Override
     public Response executeShow() {
         String showString = "";
-        List<City> cities = sortCollection();
+        City[] cities = getCitiesArray();
         for (Object object : cities) {
             City city = (City) object;
             showString += city.show();
@@ -226,19 +223,11 @@ public class CollectionWorker implements Executor {
 
     @Override
     public ArrayDeque<City> getCollection() {
-        return cities;
+        ArrayDeque<City> arrayDeque = new ArrayDeque<>(cities.stream().sorted().collect(Collectors.toList()));
+        return arrayDeque;
     }
 
-    private List<City> sortCollection(){
-        List<City> cities = new ArrayList<>();
-        cities.addAll(this.cities);
-        Collections.sort(cities);
-        return cities;
-    }
-
-    private City[] getCitiesArray(){
-        City[] cities = new City[getCollection().size()];
-        cities = sortCollection().toArray(cities);
-        return cities;
+    private City[] getCitiesArray() {
+        return cities.stream().sorted().toArray(City[]::new);
     }
 }
