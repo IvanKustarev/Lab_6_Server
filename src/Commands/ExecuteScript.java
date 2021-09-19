@@ -29,4 +29,8 @@ public class ExecuteScript extends AbstractCommand {
     public CommandName getCommandName() {
         return getName();
     }
+
+    public String getParameter() {
+        return parameter;
+    }
 }

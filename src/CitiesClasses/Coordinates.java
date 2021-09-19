@@ -1,6 +1,8 @@
 package CitiesClasses;
 
-public class Coordinates {
+import java.io.Serializable;
+
+public class Coordinates implements Serializable {
     private int x; //Максимальное значение поля: 96
     private float y;
 

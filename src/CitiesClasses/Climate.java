@@ -1,6 +1,8 @@
 package CitiesClasses;
 
-public enum Climate {
+import java.io.Serializable;
+
+public enum Climate implements Serializable {
     RAIN_FOREST,
     MEDITERRANIAN,
     STEPPE,

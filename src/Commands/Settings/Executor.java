@@ -3,6 +3,8 @@ package Commands.Settings;
 import CitiesClasses.City;
 import Messenger.Response;
 
+import java.util.ArrayDeque;
+
 public interface Executor {
     public Response executeAdd(City city);
     public Response executeClear();
@@ -19,4 +21,5 @@ public interface Executor {
     public Response executeRemoveHead();
     public Response executeShow();
     public Response executeUpdate(String id, City city);
+    public ArrayDeque<City> getCollection();
 }

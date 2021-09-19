@@ -1,6 +1,8 @@
 package CitiesClasses;
 
-public enum Government {
+import java.io.Serializable;
+
+public enum Government implements Serializable {
     DESPOTISM,
     STRATOCRACY,
     TELLUROCRACY,

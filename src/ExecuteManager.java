@@ -19,18 +19,30 @@ public class ExecuteManager {
     }
 
     public void startExecuteUsersCommands(){
-        while (true) {
-            List<Request> requests = messenger.checkRequests(executor);
-            for(Request request : requests){
-                if(request.isCommandRequest()){
-                    Response response = request.getCommand().execute(executor);
-                    response.setSocket(request.getSocket());
-                    try {
-                        messenger.sendResponse(response);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        consoleWorker.write("Проблема с отправкой ответа клиенту!");
-                        break;
+        UserCommandExecutor userCommandExecutor = new UserCommandExecutor();
+        userCommandExecutor.start();
+    }
+
+    private class UserCommandExecutor extends Thread{
+        @Override
+        public void run() {
+            startExecuteUsersCommands();
+        }
+
+        public void startExecuteUsersCommands(){
+            while (true) {
+                List<Request> requests = messenger.checkRequests(executor);
+                for(Request request : requests){
+                    if(request.isCommandRequest()){
+                        Response response = request.getCommand().execute(executor);
+                        response.setSocket(request.getSocket());
+                        try {
+                            messenger.sendResponse(response);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            consoleWorker.write("Проблема с отправкой ответа клиенту!");
+                            break;
+                        }
                     }
                 }
             }
