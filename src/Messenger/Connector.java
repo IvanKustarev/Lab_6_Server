@@ -23,7 +23,7 @@ public class Connector {
     }
 
     public void createConnector(){
-        consoleWorker.write("Введите порт сервера:");
+        consoleWorker.write("Введите порт, который будет прослушивать сервер:");
         String portStr = consoleWorker.read();
         int port;
         try {
@@ -34,7 +34,7 @@ public class Connector {
             return;
         }
         try {
-            serverSocket = new ServerSocket(7777);
+            serverSocket = new ServerSocket(port);
         } catch (IOException e) {
             consoleWorker.write("Порт уже занят, попробуйте другой!");
             createConnector();

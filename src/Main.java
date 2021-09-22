@@ -20,7 +20,7 @@ public class Main {
         FileManager fileManager = new FileWorker(System.getenv("Lab6Path"));
         Executor executor = null;
         try {
-            executor = new CollectionWorker( fileManager.loadCollection());
+            executor = new CollectionWorker(fileManager.loadCollection());
         } catch (FileNotFoundException e) {
             consoleWorker.write("Файл с указанным именем не найден!");
             e.printStackTrace();
@@ -30,12 +30,12 @@ public class Main {
         ExecuteManager executeManager = new ExecuteManager(messenger, executor, consoleWorker);
         executeManager.startExecuteUsersCommands();
 
-        while (true){
-            consoleWorker.write("Для сохранения коллекции и остановки сервера введите exit");
+        while (true) {
+            consoleWorker.write("Для сохранения коллекции введите save / Для сохранения коллекции и остановки сервера введите exit");
             String command = consoleWorker.read();
             command = command.trim();
-            command =command.toLowerCase();
-            if(command.equals("exit")){
+            command = command.toLowerCase();
+            if (command.equals("exit")) {
                 try {
                     fileManager.saveCollection(executor.getCollection());
                     consoleWorker.write("Коллекция успешно сохранена\nЗавершаем работу сервера!");
@@ -43,7 +43,14 @@ public class Main {
                 } catch (IOException e) {
                     consoleWorker.write("Проблемы с сохранением коллекции!");
                 }
-            }else {
+            } else if (command.equals("save")) {
+                try {
+                    fileManager.saveCollection(executor.getCollection());
+                    consoleWorker.write("Коллекция успешно сохранена!");
+                } catch (IOException e) {
+                    consoleWorker.write("Проблемы с сохранением коллекции!");
+                }
+            } else {
                 consoleWorker.write("Неизвестная команда");
             }
         }

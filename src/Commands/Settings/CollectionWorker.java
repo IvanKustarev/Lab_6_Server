@@ -30,6 +30,10 @@ public class CollectionWorker implements Executor {
                 while (err) {
                     err = false;
                     newId = random.nextInt();
+                    if(newId  <= 0){
+                        err = true;
+                        continue;
+                    }
                     for (Object c : cities) {
                         if (((City) c).getId() == newId) {
                             err = true;
