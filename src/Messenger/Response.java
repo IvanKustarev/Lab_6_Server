@@ -1,5 +1,7 @@
 package Messenger;
 
+import CitiesClasses.User;
+
 import java.io.Serializable;
 import java.net.Socket;
 

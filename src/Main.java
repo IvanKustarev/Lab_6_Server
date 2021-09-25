@@ -1,6 +1,10 @@
 import CitiesClasses.City;
 import Commands.Settings.CollectionWorker;
 import Commands.Settings.Executor;
+import DBWork.Connector;
+import DBWork.DBWorker;
+import DBWork.DBWorking;
+import DBWork.PasswordEncoder;
 import FileManager.FileManager;
 import FileManager.FileWorker;
 import Messenger.Messenger;
@@ -9,6 +13,8 @@ import org.json.simple.parser.ParseException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayDeque;
 import java.util.Scanner;
 
@@ -17,15 +23,23 @@ public class Main {
     public static void main(String[] args) {
         ConsoleWorker consoleWorker = new ConsoleWorker();
         Messenger messenger = new Messenger(consoleWorker);
-        FileManager fileManager = new FileWorker(System.getenv("Lab6Path"));
+//        FileManager fileManager = new FileWorker(System.getenv("Lab6Path"));
+
+        Connection connection = null;
+        try {
+            connection = new Connector().getConnection();
+        } catch (SQLException throwables) {
+            consoleWorker.write("Проблемы с подключением к БД!");
+            return;
+        }
+
+        DBWorking dbWorking = new DBWorker(connection, new PasswordEncoder());
         Executor executor = null;
         try {
-            executor = new CollectionWorker(fileManager.loadCollection());
-        } catch (FileNotFoundException e) {
-            consoleWorker.write("Файл с указанным именем не найден!");
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
+            executor = new CollectionWorker(/*fileManager.loadCollection()*/ dbWorking.loadCollection(), dbWorking);
+        } catch (SQLException throwables) {
+            consoleWorker.write("Проблемы с загрузкой коллекции из БД!");
+            return;
         }
         ExecuteManager executeManager = new ExecuteManager(messenger, executor, consoleWorker);
         executeManager.startExecuteUsersCommands();

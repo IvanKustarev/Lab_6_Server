@@ -15,9 +15,10 @@ public class City implements Comparable, Serializable {
     private Climate climate; //Поле может быть null
     private Government government; //Поле может быть null
     private Human governor; //Поле может быть null
+    private String ownerName;
 
 
-    public City(String name, Coordinates coordinates, Date creationDate, Integer area, int population, Long metersAboveSeaLevel, Date establishmentDate, Climate climate, Government government, Human governor) {
+    public City(String name, Coordinates coordinates, Date creationDate, Integer area, int population, Long metersAboveSeaLevel, Date establishmentDate, Climate climate, Government government, Human governor, String ownerName) {
         this.name = name;
         this.coordinates = coordinates;
         this.creationDate = creationDate;
@@ -28,6 +29,7 @@ public class City implements Comparable, Serializable {
         this.climate = climate;
         this.government = government;
         this.governor = governor;
+        this.ownerName = ownerName;
     }
 
     public String show() {
@@ -57,6 +59,14 @@ public class City implements Comparable, Serializable {
             str += "Губернатор не задан\n";
         }
         return str;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
     }
 
     public int getId() {

@@ -84,7 +84,7 @@ public class FileWorker implements FileManager {
                 governor = new Human(String.valueOf(element.get("humanName")), Date.valueOf(String.valueOf(element.get("humanBirthday"))));
             } catch (Exception e) {
             }
-            City city = new City(name, new Coordinates(coordinateX, coordinateY), creationDate, area, population, metersAboveSeaLevel, establishmentDate, climate, government, governor);
+            City city = new City(name, new Coordinates(coordinateX, coordinateY), creationDate, area, population, metersAboveSeaLevel, establishmentDate, climate, government, governor, null);
             city.setId(Integer.valueOf(String.valueOf(element.get("id"))));
             cities.add(city);
         }

@@ -3,6 +3,8 @@ package Commands.Settings;
 import CitiesClasses.City;
 import CitiesClasses.Government;
 import CitiesClasses.Human;
+import CitiesClasses.User;
+import DBWork.DBWorking;
 import FileManager.FileManager;
 import Messenger.Messenger;
 import Messenger.Response;
@@ -15,13 +17,25 @@ public class CollectionWorker implements Executor {
 
     private ArrayDeque<City> cities;
     private Date dateOfInitialization = new Date();
+    private DBWorking dbWorking;
 
-    public CollectionWorker(ArrayDeque<City> cities) {
+    public CollectionWorker(ArrayDeque<City> cities, DBWorking dbWorking) {
         this.cities = cities;
+        this.dbWorking = dbWorking;
     }
 
     @Override
-    public Response executeAdd(City city) {
+    public Response executeLogin(User user) {
+        return null;
+    }
+
+    @Override
+    public Response executeRegister(User user) {
+        return null;
+    }
+
+    @Override
+    public Response executeAdd(City city, User user) {
         try {
             if (city.getId() == 0) {
                 Random random = new Random();
@@ -50,13 +64,13 @@ public class CollectionWorker implements Executor {
     }
 
     @Override
-    public Response executeClear() {
+    public Response executeClear(User user) {
         cities.clear();
         return new Response("Коллекция была очищена");
     }
 
     @Override
-    public Response executeExecuteScript(String fileName) {
+    public Response executeExecuteScript(String fileName, User user) {
         FileManager fileManager = new FileWorker("");
         String str;
         try {
@@ -68,12 +82,12 @@ public class CollectionWorker implements Executor {
     }
 
     @Override
-    public Response executeExit() {
+    public Response executeExit(User user) {
         return new Response("Заканчиваем работу прогрммы");
     }
 
     @Override
-    public Response executeFilterContainsName(String name) {
+    public Response executeFilterContainsName(String name, User user) {
         String result = "";
 
         City[] cities = Arrays.stream(getCitiesArray()).filter(City -> City.getName().contains(name)).toArray(City[]::new);
@@ -84,7 +98,7 @@ public class CollectionWorker implements Executor {
     }
 
     @Override
-    public Response executeFilterLessThanGovernor(String governorStr) {
+    public Response executeFilterLessThanGovernor(String governorStr, User user) {
         City[] cities = getCitiesArray();
         if (cities.length == 0) {
             return new Response("Коллкция пустая!");
@@ -106,12 +120,12 @@ public class CollectionWorker implements Executor {
     }
 
     @Override
-    public Response executeHead() {
+    public Response executeHead(User user) {
         return new Response(getCitiesArray()[0].show());
     }
 
     @Override
-    public Response executeHelp() {
+    public Response executeHelp(User user) {
         String answer = "help : вывести справку по доступным командам\n" +
                 "info : вывести в стандартный поток вывода информацию о коллекции (тип, дата инициализации, количество элементов и т.д.)\n" +
                 "show : вывести в стандартный поток вывода все элементы коллекции в строковом представлении\n" +
@@ -132,14 +146,14 @@ public class CollectionWorker implements Executor {
     }
 
     @Override
-    public Response executeInfo() {
+    public Response executeInfo(User user) {
         String answer = "Тип коллекции: ArrayDeque<City>" + "\n" + "Дата инициализации: " + dateOfInitialization + "\n" +
                 "Количество элементов: " + cities.size();
         return new Response(answer);
     }
 
     @Override
-    public Response executePrintFieldDescendingGovernment() {
+    public Response executePrintFieldDescendingGovernment(User user) {
         City[] cities = getCitiesArray();
         if (cities.length == 0) {
             return new Response("Коллекция пустая!");
@@ -152,7 +166,7 @@ public class CollectionWorker implements Executor {
     }
 
     @Override
-    public Response executeRemoveById(String idStr) {
+    public Response executeRemoveById(String idStr, User user) {
         int id = 0;
         try {
             id = Integer.valueOf(idStr);
@@ -171,29 +185,29 @@ public class CollectionWorker implements Executor {
     }
 
     @Override
-    public Response executeRemoveFirst() {
+    public Response executeRemoveFirst(User user) {
         City[] cities = getCitiesArray();
         if (cities.length == 0) {
             return new Response("Коллекция пустая!");
         }
         int id = cities[0].getId();
-        executeRemoveById(String.valueOf(id));
+        executeRemoveById(String.valueOf(id), user);
         return new Response("Первый элемент успешно удалён!");
     }
 
     @Override
-    public Response executeRemoveHead() {
+    public Response executeRemoveHead(User user) {
         City[] cities = getCitiesArray();
         if (cities.length == 0) {
             return new Response("Коллекция пустая!");
         }
         String str = cities[0].show();
-        executeRemoveById(String.valueOf(cities[0].getId()));
+        executeRemoveById(String.valueOf(cities[0].getId()), user);
         return new Response(str);
     }
 
     @Override
-    public Response executeShow() {
+    public Response executeShow(User user) {
         String showString = "";
         City[] cities = getCitiesArray();
         for (Object object : cities) {
@@ -209,7 +223,7 @@ public class CollectionWorker implements Executor {
     }
 
     @Override
-    public Response executeUpdate(String idStr, City city) {
+    public Response executeUpdate(String idStr, City city, User user) {
         int id = 0;
         try {
             id = Integer.valueOf(idStr);
@@ -217,8 +231,8 @@ public class CollectionWorker implements Executor {
             return new Response("id должен быть числом!");
         }
         try {
-            executeRemoveById(idStr);
-            executeAdd(city);
+            executeRemoveById(idStr, user);
+            executeAdd(city, user);
         } catch (Exception e) {
             return new Response("Проблема с обновлением объекта");
         }

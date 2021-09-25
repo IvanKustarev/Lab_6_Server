@@ -1,5 +1,6 @@
 package Messenger;
 
+import CitiesClasses.User;
 import Commands.Settings.Command;
 
 import java.io.Serializable;

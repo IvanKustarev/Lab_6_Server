@@ -90,5 +90,17 @@ public enum CommandName {
         public String toString() {
             return "update";
         }
+    },
+    LOGIN{
+        @Override
+        public String toString() {
+            return "login";
+        }
+    },
+    REGISTER{
+        @Override
+        public String toString() {
+            return "register";
+        }
     }
 }
