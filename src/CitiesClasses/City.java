@@ -34,6 +34,7 @@ public class City implements Comparable, Serializable {
 
     public String show() {
         String str = "" + "\n";
+        str += "Создатель элемента: " + ownerName + "\n";
         str += "Id города: " + id + "\n";
         str += "Название города: " + name + "\n";
         str += "X координата города: " + coordinates.getX() + "\n";

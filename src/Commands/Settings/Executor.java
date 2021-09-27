@@ -22,7 +22,7 @@ public interface Executor {
     public Response executeRemoveHead(User user);
     public Response executeShow(User user);
     public Response executeUpdate(String id, City city, User user);
-    public ArrayDeque<City> getCollection();
+//    public ArrayDeque<City> getCollection();
     public Response executeLogin(User user);
     public Response executeRegister(User user);
 }

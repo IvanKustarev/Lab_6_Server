@@ -8,9 +8,11 @@ import java.net.Socket;
 public class Response implements Serializable {
     private String message;
     private Socket socket;
+    private boolean success;
 
-    public Response(String message) {
+    public Response(String message, boolean success) {
         this.message = message;
+        this.success = success;
     }
 
     public Socket getSocket() {
@@ -23,5 +25,13 @@ public class Response implements Serializable {
 
     public String getMessage() {
         return message;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 }
