@@ -63,27 +63,7 @@ public class CollectionWorker implements Executor {
     @Override
     public Response executeAdd(City city, User user) {
         try {
-            if (city.getId() == 0) {
-                Random random = new Random();
-                boolean err = true;
-                int newId = 0;
-                while (err) {
-                    err = false;
-                    newId = random.nextInt();
-                    if (newId <= 0) {
-                        err = true;
-                        continue;
-                    }
-                    for (City c : getAllCities()) {
-                        if (c.getId() == newId) {
-                            err = true;
-                        }
-                    }
-                }
-                city.setId(newId);
-            }
             addCity(city);
-            dbWorking.pushNewCity(city);
             return new Response("Объект успешно добавлен в коллекцию", true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -114,7 +94,7 @@ public class CollectionWorker implements Executor {
 
     @Override
     public Response executeExecuteScript(String fileName, User user) {
-        FileManager fileManager = new FileWorker("");
+        FileManager fileManager = new FileWorker();
         String str;
         try {
             str = fileManager.readFile(fileName);
@@ -254,7 +234,7 @@ public class CollectionWorker implements Executor {
         City[] cities = getAllCities();
         if (cities.length == 0) {
             return new Response("Коллекция пустая!", true);
-        } else if (cities[0].getOwnerName().equals(user.getName())) {
+        } else if (!cities[0].getOwnerName().equals(user.getName())) {
             return new Response(cities[0].show() + "\n" + "Первый элемент принадлежит пользователю \"" + cities[0].getOwnerName() + "\" и не может быть удалён", true);
         } else {
             Response response = executeRemoveById(String.valueOf(cities[0].getId()), user);
@@ -306,12 +286,6 @@ public class CollectionWorker implements Executor {
         }
     }
 
-//    @Override
-//    public ArrayDeque<City> getCollection() {
-//        ArrayDeque<City> arrayDeque = new ArrayDeque<>(cities.stream().sorted().collect(Collectors.toList()));
-//        return arrayDeque;
-//    }
-
     private City[] getModifiedCities(User user) {
         Collection<City> cities = null;
         try {
@@ -338,10 +312,9 @@ public class CollectionWorker implements Executor {
         return cities.stream().sorted().toArray(City[]::new);
     }
 
-    private void addCity(City city){
-        synchronized (this){
-            cities.add(city);
-        }
+    private void addCity(City city) throws SQLException {
+        dbWorking.pushNewCity(city);
+        getAllCities();
     }
 
     private void removeCity(City city){

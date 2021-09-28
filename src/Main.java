@@ -5,6 +5,7 @@ import DBWork.Connector;
 import DBWork.DBWorker;
 import DBWork.DBWorking;
 import DBWork.PasswordEncoder;
+import FileManager.FileWorker;
 import Messenger.Messenger;
 import WorkWithConsole.ConsoleWorker;
 import org.json.simple.parser.ParseException;
@@ -27,7 +28,7 @@ public class Main {
 
         Connection connection = null;
         try {
-            connection = new Connector().getConnection();
+            connection = new Connector(consoleWorker).getConnection();
         } catch (SQLException throwables) {
             consoleWorker.write("Проблемы с подключением к БД!");
             return;

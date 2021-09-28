@@ -16,7 +16,12 @@ import java.util.Scanner;
 public class FileWorker implements FileManager {
     private String collectionFilePath;
 
-    public FileWorker(String collectionFilePath) {
+//    public FileWorker(String collectionFilePath) {
+//        this.collectionFilePath = collectionFilePath;
+//    }
+
+
+    public void setCollectionFilePath(String collectionFilePath) {
         this.collectionFilePath = collectionFilePath;
     }
 

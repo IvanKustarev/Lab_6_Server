@@ -57,10 +57,11 @@ public class DBWorker implements DBWorking {
         }
 
         String sql = "INSERT INTO CITIES " +
-                "(id,cityname,coordinatex,coordinateY,creationDate,area,population,metersAboveSeaLevel,establishmentDate,climate,government,humanName,humanBirthday,ownerName) " +
-                "VALUES ('" + String.valueOf(city.getId()) + "', '" + String.valueOf(city.getName()) + "', '" + String.valueOf(city.getCoordinates().getX()) + "', '" + String.valueOf(city.getCoordinates().getY()) + "', '" + String.valueOf(city.getCreationDate().getTime()) + "', '" +
+                "(cityname,coordinatex,coordinateY,creationDate,area,population,metersAboveSeaLevel,establishmentDate,climate,government,humanName,humanBirthday,ownerName) " +
+                "VALUES ('" + String.valueOf(city.getName()) + "', '" + String.valueOf(city.getCoordinates().getX()) + "', '" + String.valueOf(city.getCoordinates().getY()) + "', '" + String.valueOf(city.getCreationDate().getTime()) + "', '" +
                 String.valueOf(city.getArea()) + "', '" + String.valueOf(city.getPopulation()) + "', '" + String.valueOf(city.getMetersAboveSeaLevel()) + "', '" + String.valueOf(city.getEstablishmentDate().getTime()) + "', '" + climate + "', '" + government + "', '" +
                 goverName + "', '" + goverBirthDay + "', '" + String.valueOf(city.getOwnerName())  +"');";
+
 
         Statement statement = connection.createStatement();
         statement.executeUpdate(sql);
@@ -83,7 +84,7 @@ public class DBWorker implements DBWorking {
         ResultSet resultSet = statement.executeQuery("SELECT * FROM CITIES");
         Collection<City> cities = new ArrayList<>();
         while (resultSet.next()) {
-            int id = Integer.parseInt(resultSet.getString("id"));
+            int id = resultSet.getInt("id");
             String name = resultSet.getString("cityName");
             Integer coordinateX = Integer.valueOf(resultSet.getString("coordinateX"));
             Float coordinateY = Float.valueOf(resultSet.getString("coordinateY"));
